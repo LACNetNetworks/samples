@@ -1,0 +1,18 @@
+{
+	"name": "samplelocal",
+	"version": "1.0.0",
+	"description": "Deploy and send transactions",
+	"author": "Adrian Pareja",
+	"type": "module",
+	"scripts": {
+		"test": "truffle test"
+	},
+	"dependencies": {
+		"@lacchain/gas-model-provider": "^1.0.1",
+		"ethereumjs-util": "^5.1.5",
+        "ethers": "^5.6.5",
+		"pify": "^5.0.0",
+		"minimist" : "1.2.6"
+	},
+	"license": "Apache-2.0"
+}
