@@ -1,0 +1,197 @@
+version: "3.7"
+services:
+  tessera1:
+    image: lacnetnetworks/lacchain-tessera:21.1.1
+    container_name: writer-tessera-david19-01
+    environment:
+      PUBLIC_IP: writer-tessera-david19-01
+      DNS_NAME:  lacchain.com
+      HOST_TESSERA_PEER: "writer-tessera-david19-02"
+      verbosity: INFO
+    volumes:
+      - ./tessera1/tessera:/opt/lacchain/tessera/keystore
+    networks:
+      - lacchain
+  besu1: 
+    image: lacnetnetworks/lacchain-besu:21.1.6
+    container_name: writer-besu-david19-01
+    environment:
+      BESU_LOGGING: INFO
+      BESU_P2P_HOST: 179.6.85.125
+      BESU_P2P_PORT: 60607
+      BESU_RPC_HTTP_PORT    : 4545
+      BESU_RPC_WS_PORT      : 4546
+      BESU_PRIVACY_URL      : http://writer-tessera-david19-01:4444
+    entrypoint:
+      - /bin/sh
+      - -c
+    command:
+      - |
+        /opt/besu/bin/besu --genesis-file=/etc/genesis/genesis.json --data-path=/data/besu public-key  export-address --to=/data/besu/nodeAddress 
+        sleep 3; 
+        /opt/besu/bin/besu  --config-file=/etc/besu/config.toml  --node-private-key-file=/data/besu/key  --privacy-marker-transaction-signing-key-file=/data/besu/key 
+    ports:
+      - 8545:4545
+      - 9546:4546
+      - 60607:60607
+    volumes:
+      - ./tessera1/data:/data/besu
+      - ./files/genesis.json:/etc/genesis/genesis.json
+      - ./files/config-writer-tessera.toml:/etc/besu/config.toml
+      - ./tessera1/tessera:/tessera/keystore
+    networks:
+      - lacchain
+  relay1:
+    image: lacnetnetworks/relay-signer-lacchain:1.0.0
+    container_name: relay-signer-david19-01
+    environment:
+      HOST_BESU: writer-besu-david19-01
+      CONTRACT_ADDRESS: '0x3B62E51E37d090453600395Ff1f9bdf4d7398404'
+    volumes:
+      - ./tessera1/data:/opt/secret
+    networks:
+      - lacchain
+  nginx1:
+    image: lacnetnetworks/writer-nginx-lacchain:1.0.0
+    container_name: writer-nginx-david19-01
+    environment:
+      HOST_RELAY_SIGNER: relay-signer-david19-01
+      HOST_BESU: writer-besu-david19-01
+      PUBLIC_IP: 179.6.85.125
+    ports:
+      - 8081:80
+    volumes:
+      - ./tessera1/data:/opt/secret
+    networks:
+      - lacchain
+  tessera2:
+    image: lacnetnetworks/lacchain-tessera:21.1.1
+    container_name: writer-tessera-david19-02
+    environment:
+      PUBLIC_IP: writer-tessera-david19-02
+      DNS_NAME:  lacchain.com
+      HOST_TESSERA_PEER: "writer-tessera-david19-01"
+      verbosity: INFO
+    volumes:
+      - ./tessera2/tessera:/opt/lacchain/tessera/keystore
+    networks:
+      - lacchain
+  besu2: 
+    image: lacnetnetworks/lacchain-besu:21.1.6
+    container_name: writer-besu-david19-02
+    environment:
+      BESU_LOGGING: INFO
+      BESU_P2P_HOST: 181.66.150.47
+      BESU_P2P_PORT: 60608
+      BESU_RPC_HTTP_PORT    : 4545
+      BESU_RPC_WS_PORT      : 4546
+      BESU_PRIVACY_URL      : http://writer-tessera-david19-02:4444
+    entrypoint:
+      - /bin/sh
+      - -c
+    command:
+      - |
+        /opt/besu/bin/besu --genesis-file=/etc/genesis/genesis.json --data-path=/data/besu public-key  export-address --to=/data/besu/nodeAddress
+        sleep 3; 
+        /opt/besu/bin/besu  --config-file=/etc/besu/config.toml  --node-private-key-file=/data/besu/key  --privacy-marker-transaction-signing-key-file=/data/besu/key  
+    ports:
+      - 8546:4545
+      - 9547:4546
+      - 60608:60608
+    volumes:
+      - ./tessera2/data:/data/besu
+      - ./files/genesis.json:/etc/genesis/genesis.json
+      - ./files/config-writer-tessera.toml:/etc/besu/config.toml
+      - ./tessera2/tessera:/tessera/keystore
+    networks:
+      - lacchain
+  relay2:
+    image: lacnetnetworks/relay-signer-lacchain:1.0.0
+    container_name: relay-signer-david19-02
+    environment:
+      HOST_BESU: writer-besu-david19-02
+      CONTRACT_ADDRESS: '0x3B62E51E37d090453600395Ff1f9bdf4d7398404'
+    volumes:
+      - ./tessera2/data:/opt/secret
+    networks:
+      - lacchain
+  nginx2:
+    image: lacnetnetworks/writer-nginx-lacchain:1.0.0
+    container_name: writer-nginx-david19-02
+    environment:
+      HOST_RELAY_SIGNER: relay-signer-david19-02
+      HOST_BESU: writer-besu-david19-02
+      PUBLIC_IP: 181.66.150.47
+    ports:
+      - 8082:80
+    volumes:
+      - ./tessera2/data:/opt/secret
+    networks:
+      - lacchain
+  tessera3:
+    image: lacnetnetworks/lacchain-tessera:21.1.1
+    container_name: writer-tessera-david19-03
+    environment:
+      PUBLIC_IP: writer-tessera-david19-03
+      DNS_NAME:  lacchain.com
+      HOST_TESSERA_PEER: "writer-tessera-david19-01"
+      verbosity: INFO
+    volumes:
+      - ./tessera3/tessera:/opt/lacchain/tessera/keystore
+    networks:
+      - lacchain
+  besu3: 
+    image: lacnetnetworks/lacchain-besu:21.1.6
+    container_name: writer-besu-david19-03
+    environment:
+      BESU_LOGGING: INFO
+      BESU_P2P_HOST: 179.6.81.244
+      BESU_P2P_PORT: 60609
+      BESU_RPC_HTTP_PORT    : 4545
+      BESU_RPC_WS_PORT      : 4546
+      BESU_PRIVACY_URL      : http://writer-tessera-david19-03:4444
+    entrypoint:
+      - /bin/sh
+      - -c
+    command:
+      - |
+        /opt/besu/bin/besu --genesis-file=/etc/genesis/genesis.json --data-path=/data/besu public-key  export-address --to=/data/besu/nodeAddress
+        sleep 3; 
+        /opt/besu/bin/besu  --config-file=/etc/besu/config.toml  --node-private-key-file=/data/besu/key   --privacy-marker-transaction-signing-key-file=/data/besu/key 
+    ports:
+      - 8547:4545
+      - 9548:4546
+      - 60609:60609
+    volumes:
+      - ./tessera3/data:/data/besu
+      - ./files/genesis.json:/etc/genesis/genesis.json
+      - ./files/config-writer-tessera.toml:/etc/besu/config.toml
+      - ./tessera3/tessera:/tessera/keystore
+    networks:
+      - lacchain
+  relay3:
+    image: lacnetnetworks/relay-signer-lacchain:1.0.0
+    container_name: relay-signer-david19-03
+    environment:
+      HOST_BESU:  writer-besu-david19-03
+      CONTRACT_ADDRESS: '0x3B62E51E37d090453600395Ff1f9bdf4d7398404'
+    volumes:
+      - ./tessera3/data:/opt/secret
+    networks:
+      - lacchain
+  nginx3:
+    image: lacnetnetworks/writer-nginx-lacchain:1.0.0
+    container_name: writer-nginx-david19-03
+    environment:
+      HOST_RELAY_SIGNER: relay-signer-david19-03
+      HOST_BESU: writer-besu-david19-03
+      PUBLIC_IP: 181.66.150.47
+    ports:
+      - 8083:80
+    volumes:
+      - ./tessera3/data:/opt/secret
+    networks:
+      - lacchain
+networks:
+    lacchain:
+        driver: bridge
