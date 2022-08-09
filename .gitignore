@@ -104,3 +104,6 @@ dist
 .tern-port
 
 yarn.lock
+tessera/tessera1/
+tessera/tessera2/
+tessera/tessera3/
