@@ -6,7 +6,7 @@ A simple contract will be deployed which records a hash associated with the end 
 ``` bash
     $ node --version
 ```
- private channel running, follow the instructions deploy [private channel local]().
+ private channel running, follow the instructions deploy [private channel local](https://github.com/LACNetNetworks/besu-networks/tree/feature/tessera-getting-started/docker/compose/tessera).
 
 ## 2. Install dependencies
 Please clone this repository. It contains all the code necessary to deploy a contract and send a  private transaction.
