@@ -1,12 +1,23 @@
 import fs from "fs";
 import path from "path";
-import ethers from "ethers";
+import { ethers } from "ethers";
 import minimist from "minimist";
+import { LacchainProvider, LacchainSigner } from "@lacchain/gas-model-provider";
 
-const provider = new ethers.providers.JsonRpcProvider( 'http://localhost:8545' );
+const provider = new LacchainProvider('http://localhost:8545');
 const privateKey = "8b2c4ca73a4ce874432997a1a0851ff11283996f512b39f2640d009d8dc8b408";
 const contractAddress = "0x1Fa12c57ABab623beCc34A69cB526AD39c6338D6";
-const signer = provider.getSigner()
+const nodeAddress = "0x211152ca21d5daedbcfbf61173886bbb1a217242";
+const expiration = 1836394529;
+
+
+const signer = new LacchainSigner(
+  privateKey,
+  provider,
+  nodeAddress,
+  expiration
+);
+
 var wallet = new ethers.Wallet(privateKey);
 wallet = wallet.connect(provider);
 
