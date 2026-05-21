@@ -6,14 +6,15 @@ import { LacchainProvider, LacchainSigner } from "@lacchain/gas-model-provider";
 
 const privateKey = "8b2c4ca73a4ce874432997a1a0851ff11283996f512b39f2640d009d8dc8b408";
 const nodeAddress = "0x211152ca21d5daedbcfbf61173886bbb1a217242";
-const expiration = 1836394529;
+const now = new Date();
+  const expiration_date = now.getTime() + (5 * 60 * 1000);	
 
 const provider = new LacchainProvider('http://localhost:4545');
 const signer = new LacchainSigner(
   privateKey,
   provider,
   nodeAddress,
-  expiration
+  expiration_date
 );
 
 var args = minimist(process.argv.slice(2),{

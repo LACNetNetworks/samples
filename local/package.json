@@ -8,10 +8,10 @@
 		"test": "truffle test"
 	},
 	"dependencies": {
-		"@lacchain/gas-model-provider": "^1.0.1",
-		"ethereumjs-util": "^5.1.5",
-        "ethers": "^5.6.5",
-		"pify": "^5.0.0",
+		"@lacchain/gas-model-provider": "^1.2.1",
+		"ethereumjs-util": "^7.1.5",
+        "ethers": "^6.16.0",
+		"pify": "^6.1.0",
 		"minimist" : "1.2.6"
 	},
 	"license": "Apache-2.0"

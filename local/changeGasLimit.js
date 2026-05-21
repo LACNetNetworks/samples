@@ -8,14 +8,16 @@ const provider = new LacchainProvider('http://localhost:8545');
 const privateKey = "8b2c4ca73a4ce874432997a1a0851ff11283996f512b39f2640d009d8dc8b408";
 const contractAddress = "0x1Fa12c57ABab623beCc34A69cB526AD39c6338D6";
 const nodeAddress = "0x211152ca21d5daedbcfbf61173886bbb1a217242";
-const expiration = 1836394529;
 
+  const now = new Date();
+  const expiration_date = now.getTime() + (5 * 60 * 1000);
 
+console.log('Expiration date:', new Date(expiration_date).toLocaleString() );
 const signer = new LacchainSigner(
   privateKey,
   provider,
   nodeAddress,
-  expiration
+  expiration_date
 );
 
 var wallet = new ethers.Wallet(privateKey);
@@ -26,7 +28,7 @@ var args = minimist(process.argv.slice(2),{})
 const sendTransaction = async() => {
 	const RelayHubBuild = fs.readFileSync( path.resolve() + '/build/contracts/TxRelay.json' );
 	const RelayHubJSON = JSON.parse( RelayHubBuild.toString() );
-	console.log( 'Storage:', args.contractAddress);
+	console.log( 'Storage:', contractAddress);
 	const relayHubContract = new ethers.Contract(contractAddress,RelayHubJSON.abi,wallet);
 	const tx = await relayHubContract.setMaxGasBlockLimit(args.gasLimit, { gasLimit: 500000, gasPrice: 0 });
 	console.log('Tx hash:',tx.hash)
